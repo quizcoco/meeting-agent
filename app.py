@@ -1,6 +1,5 @@
 from queue import Empty, Queue
 from threading import Thread
-from threading import Event
 import threading
 # 여러 작업을 동시에 실행하기 위해 사용
 
