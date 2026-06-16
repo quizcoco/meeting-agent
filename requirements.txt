@@ -1,6 +1,9 @@
-faster_whisper==1.2.1
+boto3==1.43.25
+faiss-cpu==1.14.2
+fastapi==0.136.3
+uvicorn==0.48.0
 numpy==2.4.6
-openai==2.40.0
+psycopg2-binary==2.9.12
+pydantic==2.13.4
 python-dotenv==1.2.2
-sounddevice==0.5.5
-streamlit==1.58.0
+sentence-transformers==5.5.1

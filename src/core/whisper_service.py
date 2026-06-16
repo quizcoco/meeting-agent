@@ -27,17 +27,6 @@ model = WhisperModel(
 )
 
 
-def file_to_text(path):
-
-    print("1. transcribe 시작")
-
-    result = model.transcribe(path)
-
-    print("2. transcribe 완료")
-
-
-    return result["text"]
-
 def speech_to_text(audio):
     # STT 처리 시간 측정 시작
     start = time.time()
@@ -87,12 +76,6 @@ def speech_to_text(audio):
     text = " ".join( 
         segment.text
         for segment in segments
-    )
-
-    print(
-        "실제 STT 시간:",
-        round(time.time() - start, 2), # 두번째 소수점까지 반올림
-        "초"
     )
 
     return text

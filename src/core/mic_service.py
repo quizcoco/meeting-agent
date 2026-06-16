@@ -44,7 +44,6 @@ def record_chunk(duration=0.5):
 
     sd.wait()     # 녹음 완료까지 대기 - 완료되기 전에 다음 코드가 실행되는 것을 방지
     # 녹음 직후 최대 음량 확인
-    print("max volume:", np.max(np.abs(audio)))
 
     # flatten() : 
     # 모노 녹음이어도 2차원 배열로 들어오기 때문에
@@ -59,12 +58,5 @@ def record_chunk(duration=0.5):
     #8000: 배열의 길이(샘플 수) → audio 배열이 8000개의 요소를 가진다는 뜻
     # -1.0, 1.0: 각 샘플이 가질 수 있는 값의 범위(진폭/음량)
 
-
-
-    # 평균 음량
-    print("평균:", np.mean(np.abs(audio)))
-
-    # 최대 음량
-    print("최대:", np.max(np.abs(audio)))
 
     return audio

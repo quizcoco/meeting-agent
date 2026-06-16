@@ -1,74 +1,69 @@
-import json
-import os
-import re
-from urllib import response
+def validate_minutes_schema(minutes):
 
-from openai import OpenAI
+    required_fields = [
+        "title",
+        "purpose",
+        "discussion",
+        "decision",
+        "action_items",
+        "summary"
+    ]
 
-# import google.generativeai as genai
+    # 필수 필드 존재 여부
+    for field in required_fields:
 
-# 제미나이
-# model = genai.GenerativeModel("gemini-2.5-flash")
+        if field not in minutes:
+            raise ValueError(
+                f"필수 필드 누락: {field}"
+            )
 
-# GROQ
-model = OpenAI(
-            api_key=os.getenv("GROQ_API_KEY"),
-            base_url=os.getenv("BASE_URL")
+    # 문자열 필드 검증
+    text_fields = [
+        "title",
+        "purpose",
+        "discussion",
+        "decision",
+        "summary"
+    ]
+
+    for field in text_fields:
+
+        if not isinstance(minutes[field], str):
+            raise ValueError(
+                f"{field} 타입 오류"
+            )
+
+        if not minutes[field].strip():
+            raise ValueError(
+                f"{field} 비어있음"
+            )
+
+    # action_items 검증
+    if not isinstance(
+        minutes["action_items"],
+        list
+    ):
+        raise ValueError(
+            "action_items 타입 오류"
         )
 
-def validate_minutes(transcript, minutes):
+    return True
 
-    prompt = f"""
-    원본 회의 내용
 
-    {transcript}
+def validate_minutes_content(minutes):
 
-    -----------------
+    if not minutes["title"].strip():
+        raise ValueError("title 비어있음")
 
-    생성된 회의록
+    if not minutes["summary"].strip():
+        raise ValueError("summary 비어있음")
 
-    {minutes}
+    return True
 
-    -----------------
+def validate_minutes(minutes):
 
-    아래를 검증하시오.
+    validate_minutes_schema(minutes)
 
-    1. 회의록에 없는 내용이 추가되었는가(참석자 정보 제외)
-    2. 중요한 TODO가 누락되었는가
-    
+    validate_minutes_content(minutes)
 
-    정상인 경우
-
-    {{"status":"PASS"}}
-
-    문제가 있는 경우
-
-    {{"status":"FAIL","reason":"설명"}}
-
-    ```json은 제외하고, JSON형태로 출력하시오. 
-
-    """
-
-    # response = model.generate_content(prompt)
-    response = model.chat.completions.create(
-        model=os.getenv("LLM_MODEL"),
-        messages=[
-        {
-            "role": "user",
-            "content": prompt
-        }
-    ]   )
-    print(response.choices[0].message.content)
-
-    text = response.choices[0].message.content.strip()
-    # text = response.text.strip() # 제미나이의 경우 .text로 결과를 가져옴
-
-    match = re.search(r'\{.*\}', text, re.DOTALL)
-
-    if match:
-        result = json.loads(match.group())
-    else:
-        print("JSON 파싱 실패")
-        result = {"status": "FAIL", "reason": "JSON 파싱 실패"}
-
-    return result
+    return True
