@@ -1,0 +1,22 @@
+name: Test Action
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 가져오기
+        uses: actions/checkout@v4
+
+      - name: Python 확인
+        run: python --version
+
+      - name: 파일 확인
+        run: |
+          ls -al
+          ls -al src
