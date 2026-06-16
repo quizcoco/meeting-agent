@@ -1,4 +1,4 @@
-name: Test Action
+name: Docker Build Test
 
 on:
   push:
@@ -6,17 +6,23 @@ on:
       - main
 
 jobs:
-  test:
+  docker-build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 코드 가져오기
+      # 코드 가져오기
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Python 확인
-        run: python --version
+      # Docker Buildx 준비
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      - name: 파일 확인
-        run: |
-          ls -al
-          ls -al src
+
+      # Docker 이미지 빌드 테스트
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: meeting-agent:test
